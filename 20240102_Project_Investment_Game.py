@@ -2,8 +2,11 @@
 import requests
 import pandas as pd
 
+# Key Veerle
+#key_Veerle = "FQJG0MA1QHQ7U9EL"
+
 # Define URL for API and retrieving stock information
-response = requests.get("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&outputsize=full&apikey=demo")
+response = requests.get("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&outputsize=full&apikey=FQJG0MA1QHQ7U9EL")
 
 # Since we are retrieving stuff from a web service, it's a good idea to check for the return status code
 # See: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
@@ -33,13 +36,16 @@ df.index = pd.DatetimeIndex(df.index)
 df.rename(columns=lambda s: s[3:], inplace=True)
 
 # Create dataframe with available stocks
-available_stocks = ['MFST', 'APPL']
-desired_stock = input("What stock do you want")
+available_stocks = ['MFST', 'APPL'] # Fill tomorrow with more stocks
 
-
-
-
-
+# Ask stock preference
+def stock_preference(self):
+    while True:
+        desired_stock = input("What stock do you want")
+        if desired_stock.upper() in available_stocks:
+            return desired_stock.upper()
+        else:
+            print("That stock is not available. Please try again.")
 
 
 # Asks how many stocks the user want to buy (volume)
