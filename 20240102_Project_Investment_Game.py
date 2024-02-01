@@ -1,7 +1,3 @@
-# Hi Laura I am testing this file 
-##
-print("hello Laura")
-
 # Download packages
 import requests
 import pandas as pd
@@ -22,11 +18,9 @@ print(raw_data)
 
 print(type(raw_data))
 print(raw_data.keys())
-print(raw_data['Meta Data'])
+ 
 
-# Creating a dataframe
-try_data = raw_data['Meta Data']
-
+# Creating a dataframe with stock prices
 data = raw_data['Time Series (5min)']
 df = pd.DataFrame(data).T.apply(pd.to_numeric)
 print(df.info())
@@ -37,3 +31,27 @@ df.index = pd.DatetimeIndex(df.index)
 
 # Rename columns
 df.rename(columns=lambda s: s[3:], inplace=True)
+
+# Create dataframe with available stocks
+available_stocks = ['MFST', 'APPL']
+desired_stock = input("What stock do you want")
+
+
+
+
+
+
+
+# Asks how many stocks the user want to buy (volume)
+def amount_stocks(self):
+    while True:
+        try:
+            num_stocks = int(input("How many stocks do you want to buy? "))
+            if num_stocks < 0:
+                print("The number of stocks cannot be negative. Please enter again.")
+                continue
+            return num_stocks
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+
