@@ -21,3 +21,9 @@ raw_data = response.json()
 print(type(raw_data))
 print(raw_data.keys())
 print(raw_data['Meta Data'])
+
+# Creating a dataframe
+data = raw_data['Time Series (5min)']
+df = pd.DataFrame(data).T.apply(pd.to_numeric)
+df.info()
+df.head()
