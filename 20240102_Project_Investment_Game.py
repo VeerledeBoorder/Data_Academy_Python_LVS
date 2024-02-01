@@ -18,12 +18,22 @@ if response.status_code != 200:
 raw_data = response.json()
 
 # Exploration of the data
+print(raw_data)
+
 print(type(raw_data))
 print(raw_data.keys())
 print(raw_data['Meta Data'])
 
 # Creating a dataframe
+try_data = raw_data['Meta Data']
+
 data = raw_data['Time Series (5min)']
 df = pd.DataFrame(data).T.apply(pd.to_numeric)
-df.info()
-df.head()
+print(df.info())
+print(df.head())
+
+# Set index
+df.index = pd.DatetimeIndex(df.index)
+
+# Rename columns
+df.rename(columns=lambda s: s[3:], inplace=True)
