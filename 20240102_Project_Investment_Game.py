@@ -217,5 +217,3 @@ else:
 
 final_balance = user.balance-profit_loss
 print(f"The current balance is: {final_balance}")
-
-    
