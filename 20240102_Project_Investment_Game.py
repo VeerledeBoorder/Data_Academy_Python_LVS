@@ -40,7 +40,7 @@ import pandas as pd
 
 ##Part Veerle
 # Create dataframe with available stocks
-available_stocks = ['MFST', 'APPL'] # Fill tomorrow with more stocks
+#available_stocks = ['MFST', 'APPL'] # Fill tomorrow with more stocks
 
 # Ask stock preference
 #def stock_preference():
@@ -58,10 +58,7 @@ available_stocks = ['MFST', 'APPL'] # Fill tomorrow with more stocks
 
    
 
-# Start of program
-    
-
-
+# Start of program  
 #I ask the user what stock they bought and when
 StockChoice = input ("What stock did you buy?")
 # Asks how many stocks the user want to buy (volume)
@@ -124,9 +121,9 @@ while True:
         print("The entered date does not exist in the database. Please enter a different date.")
 # We want to retrieve historical stock prices
 historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
+
 # The service sends JSON data, we parse that into a Python datastructure
 raw_data_date_purchase = historical_response.json()
-
 
 #I want to print the symbol of the 1st Best Match
 historical_price = raw_data_date_purchase["Time Series (Daily)"][date_purchase]["2. high"]
@@ -140,7 +137,9 @@ raw_data_price = now_response.json()
 current_price = raw_data_price['Global Quote']['05. price']
 print(f"The current price of {StockChoice} is: {current_price}")
 
-
+# Assuming that the current_price, historical_price and number_of_stocks are already defined
+profit = (float(current_price) - float(historical_price)) * number_of_stocks
+print(f"Your profit is: {profit}")
 
 
 
