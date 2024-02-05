@@ -21,7 +21,10 @@ class User:
     def get_balance(self):
         return self.balance
 
-user = User("Seb")
+user1 = User("Veerle")
+user1.get_balance()
+user2 = User("Laura")
+user2.get_balance()
 
 """
 # Data Exploration
@@ -88,26 +91,31 @@ def search_stock(sp500_dataset, query):
 
 def stock_selection():
     sp500_dataset = fetch_sp500_symbols()
-    query = input("Enter the stock symbol or company name to search: ")
-    matches = search_stock(sp500_dataset, query)
 
-    # Check if there are matches
-    if matches.empty:
-        print("No matches found.")
-        return None
+    while True:
+        query = input("Enter the stock symbol or company name to search (or type 'exit' to quit): ")
 
-    print("Search Results:\n", matches)
+        # Allow the user to exit the search
+        if query.lower() == 'exit':
+            return None
 
-    # Let the user select a stock if multiple matches are found
-    if len(matches) > 1:
-        selected_index = int(input("Enter the index of the stock you want to select: "))
-        selected_symbol = matches.iloc[selected_index]['Symbol']
-    else:
-        selected_symbol = matches.iloc[0]['Symbol']
+        matches = search_stock(sp500_dataset, query)
 
-    return selected_symbol
+        # Check if there are matches
+        if matches.empty:
+            print("No matches found. Please try again.")
+        else:
+            print("Search Results:\n", matches)
 
-symbol = stock_selection()
+            # Let the user select a stock if multiple matches are found
+            if len(matches) > 1:
+                selected_index = int(input("Enter the index of the stock you want to select: "))
+                selected_symbol = matches.iloc[selected_index]['Symbol']
+            else:
+                selected_symbol = matches.iloc[0]['Symbol']
+
+            return selected_symbol
+
 
 def stock_preference(symbol):
     """Fetch stock data for a given symbol using Alpha Vantage API."""
@@ -119,16 +127,18 @@ def stock_preference(symbol):
 
     raw_data = response.json()
 
+
     if "Time Series (5min)" not in raw_data:
         raise ValueError("Invalid stock symbol or no data available.")
 
     return raw_data
 
 
-
-
 #I ask the user what stock they bought and when
-StockChoice = symbol
+StockChoice = stock_selection()
+
+
+
 # Asks how many stocks the user want to buy (volume)
 # num_stocks = int(input("How many stocks did you buy? "))
 def amount_stocks():
@@ -177,7 +187,7 @@ while True:
     date_purchase = ask_purchase_date()
 
     # We want to retrieve historical stock prices
-    historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
+    historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ StockChoice + '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
     # The service sends JSON data, we parse that into a Python data structure
     raw_data_date_purchase = historical_response.json()
 
@@ -189,23 +199,21 @@ while True:
     except KeyError:
         print("The entered date does not exist in the database. Please enter a different date.")
 # We want to retrieve historical stock prices
-historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
+historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ StockChoice + '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
 # The service sends JSON data, we parse that into a Python datastructure
 raw_data_date_purchase = historical_response.json()
-
 
 #I want to print the symbol of the 1st Best Match
 historical_price = raw_data_date_purchase["Time Series (Daily)"][date_purchase]["2. high"]
 print(f"The historical price of {StockChoice} is: {historical_price}")
    
 #use the symbol to create a request to get the current price
-now_response = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+ symbol+ '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
+now_response = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+ StockChoice + '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
 # The service sends JSON data, we parse that into a Python datastructure
 raw_data_price = now_response.json()
 #Now I print the current price of the chosen stock
 current_price = raw_data_price['Global Quote']['05. price']
 print(f"The current price of {StockChoice} is: {current_price}")
-
 # Calculate the profit or loss
 profit_loss = (float(current_price) - float(historical_price)) * number_of_stocks
 # Calculate the original investment
@@ -219,11 +227,12 @@ else:
      print(f"You incurred a loss of: {-profit_loss} which is a {-profit_loss_percentage}% loss.")
 
 # Check the final balance for the specific user
-final_balance = user.balance-profit_loss
+final_balance = user1.balance-profit_loss
 print(f"The current balance is: {final_balance}")
 
+
 # Create line graph to show balance at the beginning and the and
-plt.plot(['Time of Purchase', 'Current Time'], [user.balance, final_balance])
+plt.plot(['Time of Purchase', 'Current Time'], [user1.balance, final_balance])
 plt.xlabel('Time')
 plt.ylabel('Balance')
 plt.title('Line Graph of Balance Over Time')
