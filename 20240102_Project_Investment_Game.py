@@ -109,7 +109,7 @@ symbol = raw_data_symbol['bestMatches'][0]['1. symbol']
 print(symbol)
 
 # We want to retrieve historical stock prices
-historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ 'outputsize=full&apikey=4H4XGZE8HAY85MW6')
+historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
 # The service sends JSON data, we parse that into a Python datastructure
 raw_data_date_purchase = historical_response.json()
 #I want to print the symbol of the 1st Best Match
