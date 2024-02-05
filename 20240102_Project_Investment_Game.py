@@ -96,7 +96,7 @@ date_purchase = ask_purchase_date()
 print(date_purchase) 
 
 # Now I include the name of the company in the URL with the objective of retreiving the symbol
-response = requests.get("https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=" + StockChoice + "&apikey=4H4XGZE8HAY85MW6")
+response = requests.get('https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=' + StockChoice + '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
 # Since we are retrieving stuff from a web service, it's a good idea to check for the return status code
 # See: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 if response.status_code != 200:
@@ -106,7 +106,7 @@ if response.status_code != 200:
 raw_data_symbol = response.json()
 #I want to print the symbol of the 1st Best Match
 symbol = raw_data_symbol['bestMatches'][0]['1. symbol']
-print(symbol)
+print(f"The accompying symbol for {StockChoice} is {symbol}")
 
 # We want to retrieve historical stock prices
 historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
@@ -117,7 +117,7 @@ historical_price = raw_data_date_purchase["Time Series (Daily)"][date_purchase][
 print(f"The historical price of {StockChoice} is: {historical_price}")
    
 #use the symbol to create a request to get the current price
-now_response = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+ symbol+ '&apikey=4H4XGZE8HAY85MW6')
+now_response = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+ symbol+ '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
 # The service sends JSON data, we parse that into a Python datastructure
 raw_data_price = now_response.json()
 #Now I print the current price of the chosen stock
