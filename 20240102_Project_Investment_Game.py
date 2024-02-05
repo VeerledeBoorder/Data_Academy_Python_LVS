@@ -113,30 +113,16 @@ historical_response = requests.get('https://www.alphavantage.co/query?function=T
 # The service sends JSON data, we parse that into a Python datastructure
 raw_data_date_purchase = historical_response.json()
 #I want to print the symbol of the 1st Best Match
-date = raw_data_date_purchase["Time Series (Daily)"][date_purchase]["2. high"]
-print(date)
-
-
-    
-# We now retrieve the historical stock prices for this specific date and specific stock
-final_repsonse = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY='+ date+ '&symbol='+ symbol+ '&apikey=4H4XGZE8HAY85MW6')
- 
-
-# Since we are retrieving stuff from a web service, it's a good idea to check for the return status code
-# See: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-if response.status_code != 200:
-    raise ValueError("Could not retrieve data, code:", response.status_code)
-
-
-
-
+historical_price = raw_data_date_purchase["Time Series (Daily)"][date_purchase]["2. high"]
+print(f"The historical price of {StockChoice} is: {historical_price}")
+   
 #use the symbol to create a request to get the current price
-response = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+ symbol+ '&apikey=4H4XGZE8HAY85MW6')
+now_response = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+ symbol+ '&apikey=4H4XGZE8HAY85MW6')
 # The service sends JSON data, we parse that into a Python datastructure
-raw_data_price = response.json()
+raw_data_price = now_response.json()
 #Now I print the current price of the chosen stock
 current_price = raw_data_price['Global Quote']['05. price']
-print("The current price of" + StockChoice + "is:" + current_price)
+print(f"The current price of {StockChoice} is: {current_price}")
 
 
 
