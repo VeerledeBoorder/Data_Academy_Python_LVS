@@ -81,19 +81,6 @@ def amount_stocks():
 number_of_stocks = amount_stocks()
 print(number_of_stocks)  
 
-# Asks when the user bought the stocks (time)
-#time_purchase = input("When did you buy your stock?")
-def ask_purchase_date():
-    while True:
-        date_str = input("Enter the date you bought the stocks (yyyy-mm-dd): ")
-        try:
-            purchase_date = datetime.strptime(date_str, '%Y-%m-%d')
-            return date_str
-        except ValueError:
-            print("That's not a valid date. Please enter a date in 'yyyy-mm-dd' format.")
-# Call the function
-date_purchase = ask_purchase_date()
-print(date_purchase) 
 
 # Now I include the name of the company in the URL with the objective of retreiving the symbol
 response = requests.get('https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=' + StockChoice + '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
@@ -108,10 +95,39 @@ raw_data_symbol = response.json()
 symbol = raw_data_symbol['bestMatches'][0]['1. symbol']
 print(f"The accompying symbol for {StockChoice} is {symbol}")
 
+# Asks when the user bought the stocks (time)
+#time_purchase = input("When did you buy your stock?")
+def ask_purchase_date():
+    while True:
+        date_str = input("Enter the date you bought the stocks (yyyy-mm-dd): ")
+        try:
+            purchase_date = datetime.strptime(date_str, '%Y-%m-%d')
+            return date_str
+        except ValueError:
+            print("That's not a valid date. Please enter a date in 'yyyy-mm-dd' format.")
+
+while True:
+    # Call the function
+    date_purchase = ask_purchase_date()
+
+    # We want to retrieve historical stock prices
+    historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
+    # The service sends JSON data, we parse that into a Python data structure
+    raw_data_date_purchase = historical_response.json()
+
+    # Check if date exists in database
+    try:
+        historical_price = raw_data_date_purchase["Time Series (Daily)"][date_purchase]["2. high"]
+        print(f"The historical price of {StockChoice} on {date_purchase} is: {historical_price}")
+        break
+    except KeyError:
+        print("The entered date does not exist in the database. Please enter a different date.")
 # We want to retrieve historical stock prices
 historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ '&outputsize=full&apikey=4H4XGZE8HAY85MW6')
 # The service sends JSON data, we parse that into a Python datastructure
 raw_data_date_purchase = historical_response.json()
+
+
 #I want to print the symbol of the 1st Best Match
 historical_price = raw_data_date_purchase["Time Series (Daily)"][date_purchase]["2. high"]
 print(f"The historical price of {StockChoice} is: {historical_price}")
