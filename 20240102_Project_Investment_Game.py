@@ -2,6 +2,7 @@
 from datetime import datetime
 import requests
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Create new user with a username and an initial balance. Default initial balance is set to 10,000 virtual coins.
 
@@ -207,13 +208,31 @@ print(f"The current price of {StockChoice} is: {current_price}")
 
 # Calculate the profit or loss
 profit_loss = (float(current_price) - float(historical_price)) * number_of_stocks
-
+# Calculate the original investment
+original_investment = float(historical_price) * number_of_stocks
+# Calculate the profit or loss percentage
+profit_loss_percentage = round((profit_loss / original_investment) * 100, 2)
 # Check if the result is positive or negative
 if profit_loss > 0:
-    print(f"You made a profit of: {profit_loss}")
+    print(f"You made a profit of: {profit_loss} which is a {profit_loss_percentage}% gain.")
 else:
-     print(f"You incurred a loss of: {-profit_loss}")
+     print(f"You incurred a loss of: {-profit_loss} which is a {-profit_loss_percentage}% loss.")
 
-
+# Check the final balance for the specific user
 final_balance = user.balance-profit_loss
 print(f"The current balance is: {final_balance}")
+
+# Create line graph to show balance at the beginning and the and
+plt.plot(['Time of Purchase', 'Current Time'], [user.balance, final_balance])
+plt.xlabel('Time')
+plt.ylabel('Balance')
+plt.title('Line Graph of Balance Over Time')
+plt.show()
+
+# Create line graph to show stock prices at the beginning and the and
+plt.plot(['Time of Purchase', 'Current Time'], [historical_price, current_price])
+plt.xlabel('Time')
+plt.ylabel('Stock Price')
+plt.title('Line Graph of Stock Price Over Time')
+plt.show()
+
