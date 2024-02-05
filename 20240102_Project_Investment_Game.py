@@ -46,7 +46,7 @@ def stock_preference(self):
             return desired_stock.upper()
         else:
             print("That stock is not available. Please try again.")
-
+            
 
 # Asks how many stocks the user want to buy (volume)
 def amount_stocks(self):
