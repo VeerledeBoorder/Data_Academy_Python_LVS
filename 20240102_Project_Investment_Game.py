@@ -1,7 +1,8 @@
 # Download packages
+from datetime import datetime
 import requests
 import pandas as pd
-import datetime as datetime
+
 
 # Data Exploration
 
@@ -10,8 +11,8 @@ import datetime as datetime
 
 # Since we are retrieving stuff from a web service, it's a good idea to check for the return status code
 # See: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-if response.status_code != 200:
-    raise ValueError("Could not retrieve data, code:", response.status_code) #get an error?
+#if response.status_code != 200:
+    #raise ValueError("Could not retrieve data, code:", response.status_code) #get an error?
 
 # The service sends JSON data, we parse that into a Python datastructure    
 # raw_data = response.json()
@@ -42,17 +43,17 @@ if response.status_code != 200:
 available_stocks = ['MFST', 'APPL'] # Fill tomorrow with more stocks
 
 # Ask stock preference
-def stock_preference():
-    while True:
-        desired_stock = input("What stock do you want")
-        if desired_stock.upper() in available_stocks:
-            return desired_stock.upper()
-        else:
-            print("That stock is not available. Please try again.")
+#def stock_preference():
+   # while True:
+     #   desired_stock = input("What stock do you want")
+     #   if desired_stock.upper() in available_stocks:
+       #     return desired_stock.upper()
+      #  else:
+        #    print("That stock is not available. Please try again.")
 
 # Call the function
-chosen_stock = stock_preference()
-print(chosen_stock)            
+#chosen_stock = stock_preference()
+#print(chosen_stock)
             
 
    
@@ -87,10 +88,9 @@ def ask_purchase_date():
         date_str = input("Enter the date you bought the stocks (yyyy-mm-dd): ")
         try:
             purchase_date = datetime.strptime(date_str, '%Y-%m-%d')
-            return purchase_date.date()
+            return date_str
         except ValueError:
             print("That's not a valid date. Please enter a date in 'yyyy-mm-dd' format.")
-
 # Call the function
 date_purchase = ask_purchase_date()
 print(date_purchase) 
@@ -109,14 +109,14 @@ symbol = raw_data_symbol['bestMatches'][0]['1. symbol']
 print(symbol)
 
 # We want to retrieve historical stock prices
-his_repsonse = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ '&apikey=4H4XGZE8HAY85MW6')
+historical_response = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ symbol+ 'outputsize=full&apikey=4H4XGZE8HAY85MW6')
 # The service sends JSON data, we parse that into a Python datastructure
-raw_data_date = his_response.json()
+raw_data_date_purchase = historical_response.json()
 #I want to print the symbol of the 1st Best Match
-date = raw_data_date['bestMatches'][0]['1. symbol']
+date = raw_data_date_purchase["Time Series (Daily)"][date_purchase]["2. high"]
 print(date)
 
-date = raw_data['Time Series (Daily)']
+
     
 # We now retrieve the historical stock prices for this specific date and specific stock
 final_repsonse = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY='+ date+ '&symbol='+ symbol+ '&apikey=4H4XGZE8HAY85MW6')
